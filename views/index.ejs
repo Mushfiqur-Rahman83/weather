@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Weather App</title>
+  <link rel="stylesheet" type="text/css" href="/style.css" />
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.14.0/css/all.css" />
+</head>
+
+<body>
+  <div class="container">
+    <h1>Weather App using NodeJS github121</h1>
+    <form action="/weather" method="get" class="weather-form">
+      <input type="text" name="city" placeholder="Enter city name" class="input-city" />
+      <button type="submit" class="btn-get-weather">Get Weather</button>
+    </form>
+    <% if (error) { %>
+      <p class="error">
+        <%= error %>
+      </p>
+      <% } else if (weather) { %>
+        <div class="weather-card">
+          <div class="weather-main">
+            <p class="temp">
+              <i class="fas fa-thermometer-half"></i>
+              <%=weather.main.temp%>&deg;F
+            </p>
+            <p class="condition">
+              <i class="fas fa-cloud"></i>
+              <%=weather.weather[0].main%>
+            </p>
+            <p class="location">
+              <i class="fas fa-map-marker-alt"></i>
+              <%=weather.name%>, <%=weather.sys.country%>
+            </p>
+          </div>
+
+          <div class="weather-info-boxes">
+            <div class="info-box">
+              <i class="fas fa-wind"></i>
+              <p>Wind Speed</p>
+              <p>
+                <%=weather.wind.speed%> m/s
+              </p>
+            </div>
+            <div class="info-box">
+              <i class="fas fa-tint"></i>
+              <p>Humidity</p>
+              <p>
+                <%=weather.main.humidity%>%
+              </p>
+            </div>
+            <div class="info-box">
+              <i class="fas fa-compress-arrows-alt"></i>
+              <p>Pressure</p>
+              <p>
+                <%=weather.main.pressure%> hPa
+              </p>
+            </div>
+          </div>
+        </div>
+        <% } %>
+  </div>
+</body>
+
+</html>
