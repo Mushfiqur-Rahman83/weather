@@ -21,15 +21,19 @@ jobs:
     - name: Install dependencies
       run: npm install
 
-    # SSH Connection Test (You can add this before actual deployment)
-    - name: Test SSH Connection
-      run: ssh -o StrictHostKeyChecking=no root@167.71.239.56 'echo "SSH Connection Successful"'
-      env:
-        SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+    # Step to add SSH Key from GitHub Secrets to the runner
+    - name: Add SSH Key
+      run: |
+        mkdir -p ~/.ssh
+        echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+        chmod 600 ~/.ssh/id_rsa
+        ssh-keyscan -H 167.71.239.56 >> ~/.ssh/known_hosts
 
-    # Deployment Step
+    # Test the SSH connection
+    - name: Test SSH Connection
+      run: ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa root@167.71.239.56 'echo "SSH Connection Successful"'
+
+    # Deployment step
     - name: Deploy via SSH
       run: |
-        ssh -o StrictHostKeyChecking=no root@167.71.239.56 'cd /root/weather-app-starter && git pull && npm install && pm2 restart all'
-      env:
-        SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+        ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa root@167.71.239.56 'cd /root/weather-app-starter && git pull && npm install && pm2 restart all'
